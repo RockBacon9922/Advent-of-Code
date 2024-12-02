@@ -1,4 +1,7 @@
 {
   "python.analysis.typeCheckingMode": "strict",
-  "rust-analyzer.linkedProjects": ["2024/day1/rust/Cargo.toml"]
+  "rust-analyzer.linkedProjects": [
+    "2024/day1/rust/Cargo.toml",
+    "2024/day2/rust/Cargo.toml"
+  ]
 }
