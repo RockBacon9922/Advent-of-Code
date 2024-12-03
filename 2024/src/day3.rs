@@ -1,33 +1,20 @@
 use regex;
 
-fn main() {
-    // read input.txt
-    let input = std::fs::read_to_string("../input1").expect("Failed to read input.txt");
+#[aoc(day3, part1)]
+fn part1(input: &str) -> u32 {
+    let muls = extract_muls_from_string(input);
+    multiply_pairs(muls).try_into().unwrap()
+}
 
-    // extract the mul commands
-    let muls = extract_muls_from_string(&input);
-
-    // multiply the pairs
-    let result = multiply_pairs(muls);
-
-    assert_eq!(result, 170778545);
-    println!("Result: {}", result);
-
-    // extract the enabled areas
-    let enabled_areas = extract_enabled_areas(&input);
-
-    //extract the muls from the enabled areas
+#[aoc(day3, part2)]
+fn part2(input: &str) -> u32 {
+    let enabled_areas = extract_enabled_areas(input);
     let muls = enabled_areas
         .iter()
         .map(|area| extract_muls_from_string(area))
         .flatten()
         .collect::<Vec<(i32, i32)>>();
-
-    // multiply the pairs
-    let result = multiply_pairs(muls);
-
-    assert_eq!(result, 82868252);
-    println!("Result: {}", result);
+    multiply_pairs(muls).try_into().unwrap()
 }
 
 // xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))

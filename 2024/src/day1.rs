@@ -1,29 +1,5 @@
-use std::io::BufRead;
-
-fn main() {
-    let (list1, list2) = interpret_lists("../input1");
-    let distance = calculate_distance(list1, list2);
-    println!("Distance: {}", distance);
-
-    let (list1, list2) = interpret_lists("../input1");
-    let similarity = calculate_similarity(list1, list2);
-    println!("Similarity: {}", similarity);
-}
-
-fn interpret_lists(filename: &str) -> (Vec<i32>, Vec<i32>) {
-    let contents = std::fs::File::open(filename).expect("File not found");
-    // turn every line into a byte array
-    let contents: Vec<Vec<u8>> = std::io::BufReader::new(contents)
-        .lines()
-        .map(|x| x.unwrap().into_bytes())
-        .collect();
-
-    // File looks like this
-    // 69214   60950
-    // 83241   49638
-
-    // split the file into two lists
-    // remove white spaces and convert to i32
+fn interpret_lists(input: &str) -> (Vec<i32>, Vec<i32>) {
+    let contents: Vec<Vec<u8>> = input.split("\n").map(|x| x.as_bytes().to_vec()).collect();
 
     let (list1, list2): (Vec<i32>, Vec<i32>) = contents
         .iter()
@@ -40,6 +16,18 @@ fn interpret_lists(filename: &str) -> (Vec<i32>, Vec<i32>) {
         .unzip();
 
     return (list1, list2);
+}
+
+#[aoc(day1, part1)]
+fn part1(input: &str) -> i32 {
+    let (list1, list2) = interpret_lists(input);
+    return calculate_distance(list1, list2);
+}
+
+#[aoc(day1, part2)]
+fn part2(input: &str) -> i32 {
+    let (list1, list2) = interpret_lists(input);
+    return calculate_similarity(list1, list2);
 }
 
 fn calculate_distance(list1: Vec<i32>, list2: Vec<i32>) -> i32 {
@@ -82,14 +70,28 @@ mod tests {
 
     #[test]
     fn test_calculate_distance() {
-        let (list1, list2) = interpret_lists("../input1.example");
+        let (list1, list2) = interpret_lists(
+            "3 4
+            4 3
+            2 5
+            1 3
+            3 9
+            3 3",
+        );
         let distance = calculate_distance(list1, list2);
         assert_eq!(distance, 11);
     }
 
     #[test]
     fn test_calculate_similarity() {
-        let (list1, list2) = interpret_lists("../input1.example");
+        let (list1, list2) = interpret_lists(
+            "3 4
+            4 3
+            2 5
+            1 3
+            3 9
+            3 3",
+        );
         let similarity = calculate_similarity(list1, list2);
         assert_eq!(similarity, 31);
     }

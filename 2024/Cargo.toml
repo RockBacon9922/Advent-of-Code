@@ -1,0 +1,11 @@
+[package]
+name = "advent-of-code-2024"
+version = "0.1.0"
+edition = "2021"
+authors = ["William Stoneham <william.stoneham04@gmail.com>"]
+description = "Advent of Code 2024"
+
+[dependencies]
+aoc-runner = "0.3.0"
+aoc-runner-derive = "0.3.0"
+regex = "1.11.1"

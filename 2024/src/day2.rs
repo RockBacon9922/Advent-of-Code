@@ -1,34 +1,19 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
-
-fn main() {
-    let report = read_lines("../input1");
-    println!("Result: {}", analyze_report(report));
-
-    let report = read_lines("../input1");
-    println!("Result: {}", biased_anazlye_report(report));
+#[aoc(day2, part1)]
+fn part1(input: &str) -> i32 {
+    let report = read_lines(input);
+    return analyze_report(report);
 }
 
-// Input: need to split by line
-// 7 6 4 2 1
-// 1 2 7 8 9
-// 9 7 6 2 1
-// 1 3 2 4 5
-// 8 6 4 4 1
-// 1 3 6 7 9
+#[aoc(day2, part2)]
+fn part2(input: &str) -> i32 {
+    let report = read_lines(input);
+    return biased_anazlye_report(report);
+}
 
-fn read_lines(filename: &str) -> Vec<Vec<i32>> {
-    let file = File::open(filename).expect("file not found");
-    let buf = BufReader::new(file);
-    buf.lines()
-        .map(|l| {
-            l.expect("Could not parse line")
-                .split_whitespace()
-                .map(|n| n.parse().unwrap())
-                .collect()
-        })
+fn read_lines(contents: &str) -> Vec<Vec<i32>> {
+    contents
+        .split("\n")
+        .map(|l| l.split_whitespace().map(|n| n.parse().unwrap()).collect())
         .collect()
 }
 
@@ -108,7 +93,14 @@ mod tests {
     #[test]
     fn test_read_lines() {
         assert_eq!(
-            read_lines("../input1.example"),
+            read_lines(
+                "7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9"
+            ),
             vec![
                 vec![7, 6, 4, 2, 1],
                 vec![1, 2, 7, 8, 9],
