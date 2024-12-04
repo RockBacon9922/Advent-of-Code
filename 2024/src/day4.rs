@@ -30,7 +30,6 @@ fn find_words(grid: &Vec<Vec<char>>) -> usize {
         for j in 0..grid[i].len() {
             found += check_word(grid, i, j, "XMAS");
         }
-        dbg!(found - last);
         last = found;
     }
     found
@@ -40,7 +39,7 @@ fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
     let mut found = 0;
     // forward by making a little snippet of the next word.len characters
     if j + word.len() <= grid[i].len() {
-        let snippet: String = grid[i][j..j + word.len()].iter().collect::<String>();
+        let snippet: String = grid[i][j..j + word.len()].iter().collect();
         if snippet == word {
             found += 1;
         } else if snippet == word.chars().rev().collect::<String>() {
@@ -48,9 +47,9 @@ fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
         }
     }
 
-    // vertical
+    // horizontal
     if i + word.len() <= grid.len() {
-        let snippet: String = (0..word.len()).map(|k| grid[i + k][j]).collect::<String>();
+        let snippet: String = (0..word.len()).map(|k| grid[i + k][j]).collect();
         if snippet == word {
             found += 1;
         } else if snippet == word.chars().rev().collect::<String>() {
@@ -58,11 +57,9 @@ fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
         }
     }
 
-    // forward down diagonal
+    // diagonal
     if i + word.len() <= grid.len() && j + word.len() <= grid[i].len() {
-        let snippet: String = (0..word.len())
-            .map(|k| grid[i + k][j + k])
-            .collect::<String>();
+        let snippet: String = (0..word.len()).map(|k| grid[i + k][j + k]).collect();
         if snippet == word {
             found += 1;
         } else if snippet == word.chars().rev().collect::<String>() {
@@ -70,11 +67,9 @@ fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
         }
     }
 
-    // backward down diagonal
-    if i + word.len() <= grid.len() && j >= word.len() {
-        let snippet: String = (0..word.len())
-            .map(|k| grid[i + k][j - k])
-            .collect::<String>();
+    // diagonal backwards
+    if i + word.len() <= grid.len() && j >= word.len() - 1 {
+        let snippet: String = (0..word.len()).map(|k| grid[i + k][j - k]).collect();
         if snippet == word {
             found += 1;
         } else if snippet == word.chars().rev().collect::<String>() {
@@ -106,7 +101,6 @@ MXMXAXMASX",
 
         let x = 6;
         let y = 6;
-        dbg!(check_word(&grid, y, x, "XMAS"), grid[y][x]);
         assert_eq!(find_words(&grid), 18);
     }
 }
