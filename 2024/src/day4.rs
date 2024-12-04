@@ -16,8 +16,14 @@
 fn part1(input: &str) -> usize {
     let grid = parse_input(input);
     let found_words = find_words(&grid);
-    assert_eq!(found_words, 2536);
     found_words
+}
+
+#[aoc(day4, part2)]
+fn part2(input: &str) -> usize {
+    let grid = parse_input(input);
+    let found_crosses = find_crosses(&grid);
+    found_crosses
 }
 
 // The best data structure for this problem would be a 2D vector (Vec<Vec<char>>) to represent the grid.
@@ -35,6 +41,16 @@ fn find_words(grid: &Vec<Vec<char>>) -> usize {
     found
 }
 
+fn find_crosses(grid: &Vec<Vec<char>>) -> usize {
+    let mut found = 0;
+    for i in 0..grid.len() {
+        for j in 0..grid[i].len() {
+            found += check_for_cross(grid, i, j, "MAS");
+        }
+    }
+    found
+}
+
 fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
     let mut found = 0;
     found += check_horizontal(grid, i, j, word);
@@ -42,6 +58,14 @@ fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
     found += check_diagonal(grid, i, j, word);
     found += check_diagonal_backwards(grid, i, j, word);
     found
+}
+
+fn check_for_cross(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
+    if check_diagonal(grid, i, j, word) == 1 && check_diagonal_backwards(grid, i, j + 2, word) == 1
+    {
+        return 1;
+    }
+    0
 }
 
 fn check_horizontal(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
@@ -108,5 +132,23 @@ MXMXAXMASX",
         );
 
         assert_eq!(find_words(&grid), 18);
+    }
+
+    #[test]
+    fn test_crosses() {
+        let grid = parse_input(
+            "MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX",
+        );
+
+        assert_eq!(find_crosses(&grid), 9);
     }
 }
