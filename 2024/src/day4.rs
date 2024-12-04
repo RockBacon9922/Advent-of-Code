@@ -15,7 +15,9 @@
 #[aoc(day4, part1)]
 fn part1(input: &str) -> usize {
     let grid = parse_input(input);
-    find_words(&grid)
+    let found_words = find_words(&grid);
+    assert_eq!(found_words, 2536);
+    found_words
 }
 
 // The best data structure for this problem would be a 2D vector (Vec<Vec<char>>) to represent the grid.
@@ -25,58 +27,64 @@ fn parse_input(input: &str) -> Vec<Vec<char>> {
 
 fn find_words(grid: &Vec<Vec<char>>) -> usize {
     let mut found = 0;
-    let mut last = 0;
     for i in 0..grid.len() {
         for j in 0..grid[i].len() {
             found += check_word(grid, i, j, "XMAS");
         }
-        last = found;
     }
     found
 }
 
 fn check_word(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
     let mut found = 0;
-    // forward by making a little snippet of the next word.len characters
+    found += check_horizontal(grid, i, j, word);
+    found += check_vertical(grid, i, j, word);
+    found += check_diagonal(grid, i, j, word);
+    found += check_diagonal_backwards(grid, i, j, word);
+    found
+}
+
+fn check_horizontal(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
+    let mut found = 0;
     if j + word.len() <= grid[i].len() {
         let snippet: String = grid[i][j..j + word.len()].iter().collect();
-        if snippet == word {
-            found += 1;
-        } else if snippet == word.chars().rev().collect::<String>() {
+        if snippet == word || snippet == word.chars().rev().collect::<String>() {
             found += 1;
         }
     }
+    found
+}
 
-    // horizontal
+fn check_vertical(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
+    let mut found = 0;
     if i + word.len() <= grid.len() {
         let snippet: String = (0..word.len()).map(|k| grid[i + k][j]).collect();
-        if snippet == word {
-            found += 1;
-        } else if snippet == word.chars().rev().collect::<String>() {
+        if snippet == word || snippet == word.chars().rev().collect::<String>() {
             found += 1;
         }
     }
+    found
+}
 
-    // diagonal
+fn check_diagonal(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
+    let mut found = 0;
     if i + word.len() <= grid.len() && j + word.len() <= grid[i].len() {
         let snippet: String = (0..word.len()).map(|k| grid[i + k][j + k]).collect();
-        if snippet == word {
-            found += 1;
-        } else if snippet == word.chars().rev().collect::<String>() {
+        if snippet == word || snippet == word.chars().rev().collect::<String>() {
             found += 1;
         }
     }
+    found
+}
 
-    // diagonal backwards
+fn check_diagonal_backwards(grid: &Vec<Vec<char>>, i: usize, j: usize, word: &str) -> usize {
+    let mut found = 0;
     if i + word.len() <= grid.len() && j >= word.len() - 1 {
         let snippet: String = (0..word.len()).map(|k| grid[i + k][j - k]).collect();
-        if snippet == word {
-            found += 1;
-        } else if snippet == word.chars().rev().collect::<String>() {
+        if snippet == word || snippet == word.chars().rev().collect::<String>() {
             found += 1;
         }
     }
-
     found
 }
 
@@ -99,8 +107,6 @@ MAMMMXMMMM
 MXMXAXMASX",
         );
 
-        let x = 6;
-        let y = 6;
         assert_eq!(find_words(&grid), 18);
     }
 }
